@@ -1,4 +1,5 @@
-package binary;
+package sequential;
+import binary.*;
 import binary.Node;
 import java.awt.Graphics;
 import java.awt.Color;

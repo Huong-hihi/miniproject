@@ -288,6 +288,7 @@ public class BSMain {
 					JOptionPane.showMessageDialog(null, "MAX");
 				} 
 				else{
+                                 reset();
 				int n = Integer.parseInt(add.getText());
 				addNodeplus(arrNode,n);
 				add.setText("");
@@ -303,6 +304,7 @@ public class BSMain {
 					JOptionPane.showMessageDialog(null, "MAX");
 				}
 				else {
+                                        reset();
 					int n;
 					do{n = r.nextInt(100);}while(checkList(arrNode, n));
 					addNodeplus(arrNode, n);
@@ -338,7 +340,7 @@ public class BSMain {
 				canvas.repaint();
 			}
 		});
-		tmr2 = new Timer(1,new ActionListener() {
+		tmr2 = new Timer(10,new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(arrNodemid.size() < 3/2) {
 					tmr2.stop();
