@@ -1,4 +1,6 @@
-package sequential;
+package binary;
+
+
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Font;
@@ -21,24 +23,25 @@ import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.plaf.FontUIResource;
 
-public class SequentialController {
+public class BSMain {
 	JFrame frame;
-	public int valueX = -1;
-	public int valueY = -1;
-	public int WIDTH = 950;
-	public int idofnode = 0, idsearch = 0;
-	public final int HEIGHT = 800;
-	public final int MSIZE = 900;
-	public int CSIZE = 65;
-	public boolean solving = false;
-	public Random r = new Random();
-	public Node searchNode = new Node(20,30);
-	public ArrayList<Node> arrNode = new ArrayList<Node>();
-	public ArrayList<Integer> arrNodemid = new ArrayList<Integer>();
+	private int valueX = -1;
+	private int valueY = -1;
+	private int WIDTH = 950;
+	private final int HEIGHT = 650;
+	private final int MSIZE = 900;
+	private int CSIZE = 65;
+	private boolean solving = false;
+	private insertSort isSort = new insertSort();
+	private Random r = new Random();
+	private Node searchNode = new Node(20,30);
+	private ArrayList<Node> arrNode = new ArrayList<Node>();
+	private ArrayList<Integer> arrNodemid = new ArrayList<Integer>();
 	Timer tmr,tmr2,tmr3 ;
 	
 	JTextField txtsearch = new JTextField();
 	JTextField add = new JTextField();
+        JTextField rm = new JTextField();
 	
 	JButton buttsearch = new JButton("Search");
 	JButton buttadd = new JButton("Add");
@@ -56,7 +59,7 @@ public class SequentialController {
 		Node node1 = new Node(valueX,valueY);
 		node1.setValue(n);
 		if(!checkList(arrNode1, node1)) {
-		arrNode.add(node1);
+		isSort.insertionSort(arrNode1, node1);
 		setXYNode(arrNode1);
 		add.setText("");
 		delay();
@@ -69,17 +72,15 @@ public class SequentialController {
 			return false;
 		}
 	}
-    public void removeNode(final MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
-        for(Node node : arrNode ) {
-        	if( x < node.getX() + CSIZE && x > node.getX() && y < node.getY() + CSIZE && y > node.getY()) {
-        		if(SwingUtilities.isRightMouseButton(e)) {
-        			arrNode.remove(node);
-        			canvas.repaint();
-        		}
-        	}
+    public boolean removeNode(ArrayList<Node> arr, int n) {
+        for(Node k : arr){
+        if(k.getValue() == n){
+        arr.remove(k);
+        update();
+        return true;
         }
+        }
+        return false;
     }
 
 	public boolean checkList(ArrayList<Node> arrNode1, Node node) {
@@ -106,8 +107,6 @@ public class SequentialController {
 			arrNodemid.remove(0);
 		}
 		solving = false;
-		idofnode = 0;
-		idsearch = 0;
 		searchNode.setValue(null);
 		searchNode.setX(20);
 		searchNode.setY(30);
@@ -122,14 +121,21 @@ public class SequentialController {
 	public void Animation() {
 		tmr2.start();
 	}
-	public boolean sequentialSearch(ArrayList<Node> arrnode, Node node) {
-		for(Node n : arrnode) {
-			if(n.getValue() == node.getValue()) {
-				idofnode = arrnode.indexOf(n);
-				solving = true;
-				return solving;
-			}
-		}
+    boolean binarySearch(ArrayList<Node> arrNode, int l, int r, int x) { 
+    	while(r >= l) {
+    		int mid = l + (r - l)/2;
+    		arrNodemid.add(arrNode.indexOf(arrNode.get(mid)));
+    		if(arrNode.get(mid).getValue() == x) {
+    			solving = true;
+    			return solving;
+    		}
+    		else if(arrNode.get(mid).getValue() > x) {
+            	r = mid -1;
+    		}
+    		else  {
+    			l = mid + 1;
+    			}
+    		}
     	return solving;
     }
 	public void drawNode(Graphics g,Node node) {
@@ -176,12 +182,12 @@ public class SequentialController {
 		setXYNode(arrNode);
 		canvas.repaint();
 	}
-	public void delay() {
+	public void delay() {	//DELAY METHOD
 		try {
 			Thread.sleep(1);
 		} catch(Exception e) {}
 	}
-	public void delay1() {
+	public void delay1() {	//DELAY METHOD
 		try {
 			Thread.sleep(500);
 		} catch(Exception e) {}
@@ -192,62 +198,65 @@ public class SequentialController {
         final int blue = (int) (Math.random() * 225);
         g.setColor(new Color(red, green, blue, 195));
     }
-	public void initialize() {	//INITIALIZE THE GUI ELEMENTS
+	private void initialize() {	//INITIALIZE THE GUI ELEMENTS
 		frame = new JFrame();
 		frame.setVisible(true);
 		frame.setResizable(false);
 		frame.setSize(WIDTH,HEIGHT);
-		frame.setTitle("Sequential Search");
+		frame.setTitle("Binary Search");
 		frame.setLocationRelativeTo(null);
-		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		toolP.setBorder(BorderFactory.createTitledBorder(loweredetched,"Controls"));
-
-		int space = 15;
+		int space = 25;
 		int buff = 45;
 		
 		toolP.setLayout(null);
 		toolP.setBounds(10,10,210,600);
 		
-		txtsearch.setBounds(40,space, 130, 25);
+		txtsearch.setBounds(40,space, 120, 25);
 		toolP.add(txtsearch);
 		space+=buff;
 		
 
 		
-		buttsearch.setBounds(40, space, 130, 25);
+		buttsearch.setBounds(40, space, 120, 25);
 		toolP.add(buttsearch);
 		space+=buff;
 		
-		add.setBounds(40,space, 130, 25);
+		add.setBounds(40,space, 120, 25);
 		toolP.add(add);
 		space+=buff;
 				
-		buttadd.setBounds(40,space, 130, 25);
+		buttadd.setBounds(40,space, 120, 25);
 		toolP.add(buttadd);
 		space+=buff;
 		
-		buttaddrd.setBounds(40,space,130,25);
+		buttaddrd.setBounds(40,space,120,25);
 		toolP.add(buttaddrd);
 		space+=buff;
 		
-		buttreset.setBounds(40, space, 130, 25);
+		buttreset.setBounds(40, space, 120, 25);
 		toolP.add(buttreset);
 		space+=buff;
 		
-		buttresetall.setBounds(40, space, 130, 25);
+		buttresetall.setBounds(40, space, 120, 25);
 		toolP.add(buttresetall);
 		space+=buff;
+                
+		rm.setBounds(40,space, 120, 25);
+		toolP.add(rm);
+		space+=buff;
 		
-		buttremove.setBounds(40, space, 130, 25);
+		buttremove.setBounds(40, space, 120, 25);
 		toolP.add(buttremove);
 		space+=buff;
 		
 		frame.getContentPane().add(toolP);
 		
 		canvas = new Map();
-		canvas.setBounds(230, 110, MSIZE+1, MSIZE+1);
+		canvas.setBounds(230, 10, MSIZE+1, MSIZE+1);
 		frame.getContentPane().add(canvas);
 		buttsearch.addActionListener(new ActionListener() {		
 			@Override
@@ -256,11 +265,12 @@ public class SequentialController {
 					JOptionPane.showMessageDialog(null, "Please input your value");
 				}
 				else {
+                                        reset();
 					int n = Integer.parseInt(txtsearch.getText());
 					searchNode.setValue(n);
 					txtsearch.setText("");
 					canvas.repaint();
-					sequentialSearch(arrNode,searchNode);
+					binarySearch(arrNode, 0, arrNode.size()-1, n);
 					Animation();
 				}
 			}
@@ -278,11 +288,10 @@ public class SequentialController {
 					JOptionPane.showMessageDialog(null, "MAX");
 				} 
 				else{
-					reset();
+                                 reset();
 				int n = Integer.parseInt(add.getText());
 				addNodeplus(arrNode,n);
 				add.setText("");
-				canvas.repaint();
 				}
 			}
 		});
@@ -295,11 +304,10 @@ public class SequentialController {
 					JOptionPane.showMessageDialog(null, "MAX");
 				}
 				else {
-					reset();
+                                        reset();
 					int n;
 					do{n = r.nextInt(100);}while(checkList(arrNode, n));
 					addNodeplus(arrNode, n);
-					canvas.repaint();
 			}
 				}
 		});
@@ -315,6 +323,15 @@ public class SequentialController {
 				resetAll();
 			}
 		});
+                
+                buttremove.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent ae) {
+                        int n = Integer.parseInt(rm.getText());
+                        removeNode(arrNode,n);
+                        rm.setText("");
+                    }
+                });
 		
 		tmr = new Timer(10, new ActionListener() {
 			
@@ -325,13 +342,13 @@ public class SequentialController {
 		});
 		tmr2 = new Timer(10,new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(idsearch > arrNode.size()- 1) {
+				if(arrNodemid.size() < 3/2) {
 					tmr2.stop();
 				}
 				else {
 					int x1 = searchNode.getX(), y1 = searchNode.getY();
-					int x2 = arrNode.get(idsearch).getX(), y2 = arrNode.get(idsearch).getY() + CSIZE + 50;
-					arrNode.get(idsearch).setNodetype(2);
+					int x2 = arrNode.get(arrNodemid.get(0)).getX(), y2 = arrNode.get(arrNodemid.get(0)).getY() + CSIZE + 50;
+					arrNode.get(arrNodemid.get(0)).setNodetype(2);
 				if(x1 < x2 - 1) {
 					x1++;
 					searchNode.setX(x1);
@@ -351,13 +368,30 @@ public class SequentialController {
 					searchNode.setX(x1);
 					y1 = y2;
 					searchNode.setY(y1);
-					if(solving && idofnode == idsearch) {
-						arrNode.get(idsearch).setNodetype(3);
-						tmr2.stop();
+					if(arrNodemid.size() == 1 && solving ) {
+						arrNode.get(arrNodemid.get(0)).setNodetype(3);
 						tmr.start();
 					}
-					idsearch++;
+					else if(arrNodemid.size() == 1 && !solving ) {
+						for(Node node : arrNode) {
+							node.setNodetype(1);
+							canvas.repaint();
+						}
+					}
+					else if(searchNode.getValue() > arrNode.get(arrNodemid.get(0)).getValue()) {
+						for(int i = 0; i < arrNodemid.get(0); i++) {
+							arrNode.get(i).setNodetype(1);
+							canvas.repaint();
+						}
+					}
+					else if(searchNode.getValue() < arrNode.get(arrNodemid.get(0)).getValue()) {
+						for(int i = arrNodemid.get(0) + 1;i <= arrNode.size() - 1 ;i++) {
+							arrNode.get(i).setNodetype(1);
+							canvas.repaint();
+						}
+						}
 					canvas.repaint();
+					arrNodemid.remove(0);
 					delay1();
 			}
 			}
@@ -365,7 +399,12 @@ public class SequentialController {
 		});
 		
 		}
-		
+	public static void main(String[] args) {
+		BSMain main = new BSMain();
+		main.initialize();
+	}
+	
+	
 	class Map extends JPanel implements MouseListener, MouseMotionListener{
 		
 		/**

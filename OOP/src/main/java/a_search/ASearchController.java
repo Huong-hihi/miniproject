@@ -412,4 +412,3 @@ public class ASearchController extends JPanel implements MouseListener, MouseMot
     }
         }
 
-

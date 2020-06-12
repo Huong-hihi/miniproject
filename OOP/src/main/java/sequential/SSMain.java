@@ -1,6 +1,6 @@
-package binary;
-
-
+package sequential;
+import binary.*;
+import binary.Node;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Font;
@@ -23,20 +23,20 @@ import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.plaf.FontUIResource;
 
-public class BinaryController {
-	JFrame frame;
-	private int valueX = -1;
-	private int valueY = -1;
-	private int WIDTH = 950;
-	private final int HEIGHT = 800;
-	private final int MSIZE = 900;
-	private int CSIZE = 65;
-	private boolean solving = false;
-	private insertSort isSort = new insertSort();
-	private Random r = new Random();
-	private Node searchNode = new Node(20,30);
-	private ArrayList<Node> arrNode = new ArrayList<Node>();
-	private ArrayList<Integer> arrNodemid = new ArrayList<Integer>();
+public class SSMain {
+	JFrame frame1;
+	public int valueX = -1;
+	public int valueY = -1;
+	public int WIDTH = 950;
+	public int idofnode = 0, idsearch = 0;
+	public final int HEIGHT = 700;
+	public final int MSIZE = 900;
+	public int CSIZE = 65;
+	public boolean solving = false;
+	public Random r = new Random();
+	public Node searchNode = new Node(20,30);
+	public ArrayList<Node> arrNode = new ArrayList<Node>();
+	public ArrayList<Integer> arrNodemid = new ArrayList<Integer>();
 	Timer tmr,tmr2,tmr3 ;
 	
 	JTextField txtsearch = new JTextField();
@@ -58,7 +58,7 @@ public class BinaryController {
 		Node node1 = new Node(valueX,valueY);
 		node1.setValue(n);
 		if(!checkList(arrNode1, node1)) {
-		isSort.insertionSort(arrNode1, node1);
+		arrNode.add(node1);
 		setXYNode(arrNode1);
 		add.setText("");
 		delay();
@@ -108,6 +108,8 @@ public class BinaryController {
 			arrNodemid.remove(0);
 		}
 		solving = false;
+		idofnode = 0;
+		idsearch = 0;
 		searchNode.setValue(null);
 		searchNode.setX(20);
 		searchNode.setY(30);
@@ -122,21 +124,14 @@ public class BinaryController {
 	public void Animation() {
 		tmr2.start();
 	}
-    boolean binarySearch(ArrayList<Node> arrNode, int l, int r, int x) { 
-    	while(r >= l) {
-    		int mid = l + (r - l)/2;
-    		arrNodemid.add(arrNode.indexOf(arrNode.get(mid)));
-    		if(arrNode.get(mid).getValue() == x) {
-    			solving = true;
-    			return solving;
-    		}
-    		else if(arrNode.get(mid).getValue() > x) {
-            	r = mid -1;
-    		}
-    		else  {
-    			l = mid + 1;
-    			}
-    		}
+	public boolean sequentialSearch(ArrayList<Node> arrnode, Node node) {
+		for(Node n : arrnode) {
+			if(n.getValue() == node.getValue()) {
+				idofnode = arrnode.indexOf(n);
+				solving = true;
+				return solving;
+			}
+		}
     	return solving;
     }
 	public void drawNode(Graphics g,Node node) {
@@ -183,12 +178,12 @@ public class BinaryController {
 		setXYNode(arrNode);
 		canvas.repaint();
 	}
-	public void delay() {	//DELAY METHOD
+	public void delay() {
 		try {
 			Thread.sleep(1);
 		} catch(Exception e) {}
 	}
-	public void delay1() {	//DELAY METHOD
+	public void delay1() {
 		try {
 			Thread.sleep(500);
 		} catch(Exception e) {}
@@ -199,61 +194,55 @@ public class BinaryController {
         final int blue = (int) (Math.random() * 225);
         g.setColor(new Color(red, green, blue, 195));
     }
-	public void initialize() {	//INITIALIZE THE GUI ELEMENTS
-		frame = new JFrame();
-		frame.setVisible(true);
-		frame.setResizable(false);
-		frame.setSize(WIDTH,HEIGHT);
-		frame.setTitle("Binary Search");
-		frame.setLocationRelativeTo(null);
-		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public void initialize(JFrame frame) {	//INITIALIZE THE GUI ELEMENTS
 		frame.getContentPane().setLayout(null);
 		
 		toolP.setBorder(BorderFactory.createTitledBorder(loweredetched,"Controls"));
-		int space = 25;
+
+		int space = 15;
 		int buff = 45;
 		
 		toolP.setLayout(null);
 		toolP.setBounds(10,10,210,600);
 		
-		txtsearch.setBounds(40,space, 130, 25);
+		txtsearch.setBounds(40,space, 120, 25);
 		toolP.add(txtsearch);
 		space+=buff;
 		
 
 		
-		buttsearch.setBounds(40, space, 130, 25);
+		buttsearch.setBounds(40, space, 120, 25);
 		toolP.add(buttsearch);
 		space+=buff;
 		
-		add.setBounds(40,space, 130, 25);
+		add.setBounds(40,space, 120, 25);
 		toolP.add(add);
 		space+=buff;
 				
-		buttadd.setBounds(40,space, 130, 25);
+		buttadd.setBounds(40,space, 120, 25);
 		toolP.add(buttadd);
 		space+=buff;
 		
-		buttaddrd.setBounds(40,space,130,25);
+		buttaddrd.setBounds(40,space,120,25);
 		toolP.add(buttaddrd);
 		space+=buff;
 		
-		buttreset.setBounds(40, space, 130, 25);
+		buttreset.setBounds(40, space, 120, 25);
 		toolP.add(buttreset);
 		space+=buff;
 		
-		buttresetall.setBounds(40, space, 130, 25);
+		buttresetall.setBounds(40, space, 120, 25);
 		toolP.add(buttresetall);
 		space+=buff;
 		
-		buttremove.setBounds(40, space, 130, 25);
+		buttremove.setBounds(40, space, 120, 25);
 		toolP.add(buttremove);
 		space+=buff;
 		
 		frame.getContentPane().add(toolP);
 		
 		canvas = new Map();
-		canvas.setBounds(230, 10, MSIZE+1, MSIZE+1);
+		canvas.setBounds(230, 110, MSIZE+1, MSIZE+1);
 		frame.getContentPane().add(canvas);
 		buttsearch.addActionListener(new ActionListener() {		
 			@Override
@@ -266,7 +255,7 @@ public class BinaryController {
 					searchNode.setValue(n);
 					txtsearch.setText("");
 					canvas.repaint();
-					binarySearch(arrNode, 0, arrNode.size()-1, n);
+					sequentialSearch(arrNode,searchNode);
 					Animation();
 				}
 			}
@@ -287,6 +276,7 @@ public class BinaryController {
 				int n = Integer.parseInt(add.getText());
 				addNodeplus(arrNode,n);
 				add.setText("");
+				canvas.repaint();
 				}
 			}
 		});
@@ -302,6 +292,7 @@ public class BinaryController {
 					int n;
 					do{n = r.nextInt(100);}while(checkList(arrNode, n));
 					addNodeplus(arrNode, n);
+					canvas.repaint();
 			}
 				}
 		});
@@ -325,15 +316,15 @@ public class BinaryController {
 				canvas.repaint();
 			}
 		});
-		tmr2 = new Timer(1,new ActionListener() {
+		tmr2 = new Timer(10,new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(arrNodemid.size() < 3/2) {
+				if(idsearch > arrNode.size()- 1) {
 					tmr2.stop();
 				}
 				else {
 					int x1 = searchNode.getX(), y1 = searchNode.getY();
-					int x2 = arrNode.get(arrNodemid.get(0)).getX(), y2 = arrNode.get(arrNodemid.get(0)).getY() + CSIZE + 50;
-					arrNode.get(arrNodemid.get(0)).setNodetype(2);
+					int x2 = arrNode.get(idsearch).getX(), y2 = arrNode.get(idsearch).getY() + CSIZE + 50;
+					arrNode.get(idsearch).setNodetype(2);
 				if(x1 < x2 - 1) {
 					x1++;
 					searchNode.setX(x1);
@@ -353,30 +344,13 @@ public class BinaryController {
 					searchNode.setX(x1);
 					y1 = y2;
 					searchNode.setY(y1);
-					if(arrNodemid.size() == 1 && solving ) {
-						arrNode.get(arrNodemid.get(0)).setNodetype(3);
+					if(solving && idofnode == idsearch) {
+						arrNode.get(idsearch).setNodetype(3);
+						tmr2.stop();
 						tmr.start();
 					}
-					else if(arrNodemid.size() == 1 && !solving ) {
-						for(Node node : arrNode) {
-							node.setNodetype(1);
-							canvas.repaint();
-						}
-					}
-					else if(searchNode.getValue() > arrNode.get(arrNodemid.get(0)).getValue()) {
-						for(int i = 0; i < arrNodemid.get(0); i++) {
-							arrNode.get(i).setNodetype(1);
-							canvas.repaint();
-						}
-					}
-					else if(searchNode.getValue() < arrNode.get(arrNodemid.get(0)).getValue()) {
-						for(int i = arrNodemid.get(0) + 1;i <= arrNode.size() - 1 ;i++) {
-							arrNode.get(i).setNodetype(1);
-							canvas.repaint();
-						}
-						}
+					idsearch++;
 					canvas.repaint();
-					arrNodemid.remove(0);
 					delay1();
 			}
 			}
@@ -384,13 +358,7 @@ public class BinaryController {
 		});
 		
 		}
-/*
-	public static void main(String[] args) {
-		BSMain main = new BSMain();
-		main.initialize();
-	}
-	
-	*/
+		
 	class Map extends JPanel implements MouseListener, MouseMotionListener{
 		
 		/**
@@ -402,7 +370,7 @@ public class BinaryController {
 			addMouseMotionListener(this);
 		}
 		
-		public void paintComponent(Graphics g) {
+		public void paintComponent(Graphics g) {	//REPAINT
 			super.paintComponent(g);
 			if(arrNode == null) {}
 			else {
@@ -415,7 +383,7 @@ public class BinaryController {
 		
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			
+			// TODO Auto-generated method stub
 			
 		}
 
