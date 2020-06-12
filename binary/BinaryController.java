@@ -1,4 +1,6 @@
 package binary;
+
+
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Font;
@@ -453,4 +455,4 @@ public class BinaryController {
 			
 	}
 }
-}
+	}

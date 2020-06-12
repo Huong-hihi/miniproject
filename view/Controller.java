@@ -1,6 +1,7 @@
 package view;
 import binary.*;
 import a_search.*;
+import sequential.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,17 +21,18 @@ public class Controller {
 	}
 	
 	public void initialize() {
-		b1.setBounds(150, 100, 250, 40);
-        b2.setBounds(150, 150, 250, 40);
-        b3.setBounds(150, 200, 250, 40);
+		b1.setBounds(362, 127, 250, 40);
+        b2.setBounds(362, 200, 250, 40);
+        b3.setBounds(362, 273, 250, 40);
 
         f.add(b1);
         f.add(b2);
         f.add(b3);
 
-        f.setSize(550, 600);
+        f.setSize(950,800);
         f.setLayout(null);
         f.setVisible(true);
+        f.setLocationRelativeTo(null);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         b2.addActionListener(new ActionListener() {		
 			public void actionPerformed(ActionEvent e) {
@@ -41,6 +43,12 @@ public class Controller {
         b3.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 ASearchController asearch = new ASearchController();
+            }
+        });
+        b1.addActionListener(new ActionListener (){
+            public void actionPerformed(ActionEvent e){
+                SequentialController sequential = new SequentialController();
+                sequential.initialize();
             }
         });
 	}
